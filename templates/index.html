@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detección de Tumores Cerebrales</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1B1B1B;
+            color: #E3E3E3;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #00AEEF;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #2B2B2B;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+        }
+        input[type="file"] {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #E3E3E3;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #00AEEF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #007BA7;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            justify-content: center;
+        }
+        .image-container img {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+        }
+        .file-info {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #00AEEF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detección de Tumores Cerebrales</h1>
+    <div class="container">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" required>
+            <button type="submit">Predecir</button>
+        </form>
+
+        <!-- Muestra el nombre del archivo seleccionado -->
+        <div class="file-info" id="fileInfo">
+            <!-- Aquí se mostrará el nombre del archivo cuando se seleccione -->
+        </div>
+
+        {% if prediction %}
+            <h2>Resultado: {{ prediction }}</h2>
+            <div class="image-container">
+                <div>
+                    <h3>Imagen Original</h3>
+                    <img src="data:image/png;base64,{{ img_original }}" alt="Imagen Original">
+                </div>
+                <div>
+                    <h3>Máscara</h3>
+                    <img src="data:image/png;base64,{{ img_mask }}" alt="Máscara">
+                </div>
+                <div>
+                    <h3>Imagen con Máscara</h3>
+                    <img src="data:image/png;base64,{{ img_masked }}" alt="Imagen con Máscara">
+                </div>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Función para mostrar el nombre del archivo seleccionado
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileInfo').innerText = 'Archivo seleccionado: ' + file.name;
+            } else {
+                document.getElementById('fileInfo').innerText = '';
+            }
+        });
+    </script>
+</body>
+</html>
